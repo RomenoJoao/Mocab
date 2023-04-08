@@ -1,26 +1,44 @@
-import { View, Text , StyleSheet,TextInput, Button } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Button } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import Mensagem from '../../components/Mensagem';
+import { io } from 'socket.io-client';
+
 export default function Conversa() {
+  const [chatMessage, setChatMessage] = useState('');
+  const [socket, setSocket] = useState(null);
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const newSocket = io("http://192.168.1.7:3000");
+    setSocket(newSocket);
+    newSocket.on('message', (message) => {
+      setMessages([...messages, message]);
+    });
+  }, [messages]);
+
   return (
     <View style={styles.container}>
       <View style={styles.head}>
-        <Button title="voltar"></Button>
-        <View style={styles.imagem}></View>
+        <Button title="voltar" />
+        <View style={styles.imagem} />
         <Text style={styles.tpessoa}>Luis Alexandre</Text>
 
         <View style={styles.botao}>
-          <Button title="Denunciar" color={"white"}></Button>
+          <Button title="Denunciar" color={"white"} />
         </View>
       </View>
-      <View style={styles.barra}></View>
+      <View style={styles.barra} />
 
-  <Mensagem msg={'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'}></Mensagem>
-  <Mensagem msg={'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'}></Mensagem>
-  <Mensagem msg={'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'}></Mensagem>
+      <View>
+        {messages.map((message, index) => (
+          <View key={index}>
+           
+            <Mensagem msg={message} />
+          </View>
+        ))}
+      </View>
 
-
-      <View style={styles.barra1}></View>
+      <View style={styles.barra1} />
 
       <View style={styles.caixaInpt}>
         <View style={styles.btenviar}>
@@ -30,16 +48,32 @@ export default function Conversa() {
               marginLeft: 10,
               marginTop: 2,
               fontWeight: "bold",
-              fontSize:'20px'
+              fontSize: '20px'
             }}
-          >
-            +
-          </Text>
+          ></Text>
         </View>
-        <TextInput placeholder="Escreva aqui.." style={styles.msg}></TextInput>
+        <TextInput
+          placeholder="Escreva aqui.."
+          style={styles.msg}
+          onChangeText={chatMessage => {
+            setChatMessage(chatMessage);
+          }}
+          value={chatMessage}
+        />
 
         <View style={styles.btenviar}>
-          <Button title=""></Button>
+          <TouchableOpacity
+            style={{ height: 40, backgroundColor: 'blue', paddingHorizontal: 20, justifyContent: 'center' }}
+            onPress={() => {
+              alert("entrei")
+              if (socket) {
+                socket.emit("message", chatMessage);
+                setChatMessage('');
+              }
+            }}
+          >
+            <Text style={{ color: '#fff' }}>Enviar</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
