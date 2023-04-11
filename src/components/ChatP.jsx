@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet,Button } from 'react-native'
 import React from 'react'
 
 export default function ChatP(props) {
   return (
     <View>
+      
       <View style={styles.retangulo}>
             <View style={styles.circle}>
 
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     shadowColor: "#838383",
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 4,
-    shadowOpacity: 0.38,
+    shadowOpacity: 0.2,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",

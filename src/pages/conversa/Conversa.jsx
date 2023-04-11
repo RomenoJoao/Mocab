@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Mensagem from '../../components/Mensagem';
 import { io } from 'socket.io-client';
 
-export default function Conversa() {
+export default function Conversa({navigation}) {
   const [chatMessage, setChatMessage] = useState('');
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -16,10 +16,14 @@ export default function Conversa() {
     });
   }, [messages]);
 
+  function goBack(){
+    navigation.navigate('Chat');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.head}>
-        <Button title="voltar" />
+        <Button title="voltar"  onPress={goBack}/>
         <View style={styles.imagem} />
         <Text style={styles.tpessoa}>Luis Alexandre</Text>
 
@@ -83,7 +87,6 @@ export default function Conversa() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     top: 80,
     left: 42,
   },
